@@ -25,8 +25,9 @@ class Window:
         self._root = Tk()
         self._root.title('title')
         self.__canvas = Canvas(height=height, width=width)
-        self.__canvas.pack()
+        self.__canvas.pack(fill=BOTH, expand=1)
         self.__running = False
+        self._root.protocol("WM_DELETE_WINDOW", self.close)
 
     def redraw(self):
         self._root.update_idletasks()
@@ -39,7 +40,6 @@ class Window:
 
     def close(self):
         self.__running = False
-        self._root.protocol("WM_DELETE_WINDOW", self.close)
 
     def draw_line(self, line: Line, fill_color: str):
         line.draw(self.__canvas, fill_color)
