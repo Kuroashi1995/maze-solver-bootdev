@@ -147,7 +147,7 @@ class Maze:
         if self.__win is None:
             return
         self.__win.redraw()
-        time.sleep(0.05)
+        time.sleep(0.025)
 
     def __break_entrance_and_exit(self):
         if self.__win is None:
