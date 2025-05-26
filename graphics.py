@@ -83,7 +83,7 @@ class Cell:
         if self.__win is None:
             return
         if not undo:
-            color = "black"
+            color = "red"
         else:
             color = "gray"
         line = Line(
@@ -132,7 +132,8 @@ class Maze:
         if self.__win is None:
             return
         self.__break_entrance_and_exit()
-        self.__break_walls_r(random.randint(0, self.__nums_cols), random.randint(0, self.__nums_rows))
+        self.__break_walls_r(random.randint(0, self.__nums_cols - 1), random.randint(0, self.__nums_rows - 1))
+        self.__reset_cells_visited()
 
     def __draw_cell(self, i, j):
         x0 = self.__x1 + i * self.__cell_size_x
@@ -203,3 +204,45 @@ class Maze:
             for j in range(len(self.__cells[i])):
                 self.__cells[i][j].visited = False
 
+    def solve(self):
+        return self.__solve_r(0, 0)
+
+    def __solve_r(self, i: int, j:int):
+        self.animate()
+        current_cell = self.__cells[i][j]
+        current_cell.visited= True
+        if i == self.__nums_cols - 1 and j == self.__nums_rows - 1:
+            return True
+        directions = [(i - 1, j), (i, j - 1), (i + 1, j), (i, j + 1)]
+        for direction in directions:
+            if direction[0] >= 0 and direction[0] < self.__nums_cols and direction[1] >= 0 and direction[1] < self.__nums_rows:
+                if not self.__cells[direction[0]][direction[1]].visited:
+                    if direction[0] < i and not current_cell.has_left_wall:
+                        current_cell.draw_move(self.__cells[direction[0]][direction[1]])
+                        solved = self.__solve_r(direction[0], direction[1])
+                        if solved:
+                            return True
+                        else:
+                            current_cell.draw_move(self.__cells[direction[0]][direction[1]], True)
+                    if direction[0] > i and not current_cell.has_right_wall:
+                        current_cell.draw_move(self.__cells[direction[0]][direction[1]])
+                        solved = self.__solve_r(direction[0], direction[1])
+                        if solved:
+                            return True
+                        else:
+                            current_cell.draw_move(self.__cells[direction[0]][direction[1]], True)
+                    if direction[1] < j and not current_cell.has_top_wall:
+                        current_cell.draw_move(self.__cells[direction[0]][direction[1]])
+                        solved = self.__solve_r(direction[0], direction[1])
+                        if solved:
+                            return True
+                        else:
+                            current_cell.draw_move(self.__cells[direction[0]][direction[1]], True)
+                    if direction[1] > j and not current_cell.has_bottom_wall:
+                        current_cell.draw_move(self.__cells[direction[0]][direction[1]])
+                        solved = self.__solve_r(direction[0], direction[1])
+                        if solved:
+                            return True
+                        else:
+                            current_cell.draw_move(self.__cells[direction[0]][direction[1]], True)
+        return False
