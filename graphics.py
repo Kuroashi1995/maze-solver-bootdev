@@ -128,7 +128,7 @@ class Maze:
                 self.__cells[i].append(cell)
                 self.__draw_cell(i,j)
         self.__break_entrance_and_exit()
-        self.__break_walls_r(0, 0)
+        self.__break_walls_r(random.randint(0, self.__nums_cols), random.randint(0, self.__nums_rows))
 
     def __draw_cell(self, i, j):
         x0 = self.__x1 + i * self.__cell_size_x
@@ -155,36 +155,29 @@ class Maze:
             self.__cells[self.__nums_cols - 1][self.__nums_rows - 1].has_bottom_wall = False
             self.__draw_cell(self.__nums_cols - 1, self.__nums_rows - 1)
 
-
     def __break_walls_r(self, i:int, j: int):
         self.__draw_cell(i, j)
-        way = random.randrange(1, 4, 1)
         self.__cells[i][j].visited = True
         up = True
         down = True
         left = True
         right = True
         while (up or down or left or right):
+            way = random.randrange(1, 5, 1)
             if way == 1:
                 left = False
-                if i - 1 > 0 and not self.__cells[i - 1][j].visited:
+                if i - 1 >= 0 and not self.__cells[i - 1][j].visited:
                     self.__cells[i][j].has_left_wall = False
                     self.__draw_cell(i, j)
                     self.__cells[i - 1][j].has_right_wall = False
                     self.__break_walls_r(i - 1, j)
-                    way += 1
-                else:
-                    way += 1
             elif way == 2:
                 down = False
-                if j - 1 > 0 and not self.__cells[i][j - 1].visited:
+                if j - 1 >= 0 and not self.__cells[i][j - 1].visited:
                     self.__cells[i][j].has_top_wall = False
                     self.__draw_cell(i, j)
                     self.__cells[i][j - 1].has_bottom_wall = False
                     self.__break_walls_r(i, j - 1)
-                    way += 1
-                else:
-                    way += 1
             elif way == 3:
                 right = False
                 if i + 1 < self.__nums_cols and not self.__cells[i + 1][j].visited:
@@ -192,9 +185,6 @@ class Maze:
                     self.__draw_cell(i, j)
                     self.__cells[i + 1][j].has_left_wall = False
                     self.__break_walls_r(i + 1, j)
-                    way += 1
-                else:
-                    way += 1
             elif way == 4:
                 up = False
                 if j + 1 < self.__nums_rows and not self.__cells[i][j + 1].visited:
@@ -202,7 +192,4 @@ class Maze:
                     self.__draw_cell(i, j)
                     self.__cells[i][j + 1].has_top_wall = False
                     self.__break_walls_r(i, j + 1)
-                    way = 1
-                else:
-                    way = 1
         return
