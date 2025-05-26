@@ -34,6 +34,23 @@ class TestBreakEntryAndExit(unittest.TestCase):
             0
         )
 
+class TestResetVisited(unittest.TestCase):
+    def test_reset_visited(self):
+        m1 = Maze(0, 0, 20, 20, 5, 5)
+        m1._Maze__reset_cells_visited()
+        self.assertListEqual(
+            [
+                m1._Maze__cells[0][0].visited,
+                m1._Maze__cells[m1._Maze__nums_cols // 2][m1._Maze__nums_rows // 2].visited,
+                m1._Maze__cells[m1._Maze__nums_cols - 1][m1._Maze__nums_rows - 1].visited,
+            ],
+            [
+                False,
+                False,
+                False
+            ]
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

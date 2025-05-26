@@ -121,12 +121,16 @@ class Maze:
         self.__create_cells()
 
     def __create_cells(self):
+        if self.__nums_rows == 0 and self.__nums_cols == 0:
+            return
         for i in range(self.__nums_cols):
             self.__cells.append([])
             for j in range(self.__nums_rows):
                 cell = Cell(self.__win)
                 self.__cells[i].append(cell)
                 self.__draw_cell(i,j)
+        if self.__win is None:
+            return
         self.__break_entrance_and_exit()
         self.__break_walls_r(random.randint(0, self.__nums_cols), random.randint(0, self.__nums_rows))
 
@@ -193,3 +197,9 @@ class Maze:
                     self.__cells[i][j + 1].has_top_wall = False
                     self.__break_walls_r(i, j + 1)
         return
+
+    def __reset_cells_visited(self):
+        for i in range(len(self.__cells)):
+            for j in range(len(self.__cells[i])):
+                self.__cells[i][j].visited = False
+
